@@ -31,6 +31,8 @@ public class AccountServiceTest {
 	private final String DOE_ACCOUNT_ID = "A001";
 	
 	private final BigDecimal ONE_THOUSAND = new BigDecimal(1000);
+	
+	private final BigDecimal MINUS_ONE_THOUSAND = new BigDecimal(-1000);
 
     @Before
     public void setUp() throws Exception {  
@@ -54,8 +56,12 @@ public class AccountServiceTest {
 	
 	@Test
 	public void checkWithdrawOperationOneThousandForDoeAccount() {
-		fail();
-	}
+        try {
+			service.withdraw(customerDoe, DOE_ACCOUNT_ID, ONE_THOUSAND, "OP002");
+		} catch (AccountException e) {
+			fail();
+		}
+        assertEquals(MINUS_ONE_THOUSAND, accountDoe.getBalance());	}
 	
 	@Test
 	public void checkBalanceForDoeAccountWithFiveHundred() {
