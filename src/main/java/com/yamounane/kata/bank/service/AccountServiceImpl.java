@@ -35,7 +35,12 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public void withdraw(Customer customer, String accountId, BigDecimal amount, String operationId)
 			throws AccountException {
-
+		if(customer != null && accountId != null && !accountId.isEmpty()) {
+			Account customerAccount = getAccount(customer, accountId);
+			operationService.addWithdrawOperation(customerAccount, amount, operationId);
+			return;
+		}
+		throw new AccountException(String.format("Unable to make a deposit because account %s or customer %s are null", accountId, customer));
 	}
 
 	@Override
