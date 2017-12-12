@@ -49,7 +49,7 @@ public class OperationServiceTest {
 	@Test
 	public void checkAddWithdrawOperationOfOneThousandForDoeAccount() {
 		try {
-			service.addDepositOperation(accountDoe, ONE_THOUSAND, "TESTOP001");
+			service.addWithdrawOperation(accountDoe, ONE_THOUSAND, "TESTOP001");
 		} catch (AccountException e) {
 			fail();
 		}
