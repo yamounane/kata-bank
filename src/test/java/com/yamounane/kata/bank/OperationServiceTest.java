@@ -4,15 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.yamounane.kata.bank.exception.AccountException;
 import com.yamounane.kata.bank.model.Account;
-import com.yamounane.kata.bank.model.Customer;
 import com.yamounane.kata.bank.service.OperationService;
 import com.yamounane.kata.bank.service.OperationServiceImpl;
 
