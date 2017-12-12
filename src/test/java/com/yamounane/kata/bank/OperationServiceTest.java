@@ -49,11 +49,22 @@ public class OperationServiceTest {
 	@Test
 	public void checkAddWithdrawOperationOfOneThousandForDoeAccount() {
 		try {
-			service.addWithdrawOperation(accountDoe, ONE_THOUSAND, "TESTOP001");
+			service.addWithdrawOperation(accountDoe, ONE_THOUSAND, "TESTOP002");
 		} catch (AccountException e) {
 			fail();
 		}
 		assertEquals(MINUS_ONE_THOUSAND, accountDoe.getBalance());
+	}
+	
+	@Test
+	public void checkComputeBalanceForOneThousandDoeAccount() {	
+		try {
+			service.addDepositOperation(accountDoe, ONE_THOUSAND, "TESTOP003");
+		} catch (AccountException e) {
+			fail();
+		}
+		assertEquals(ONE_THOUSAND, service.computeBalance(accountDoe));
+		assertEquals(ONE_THOUSAND, accountDoe.getBalance());
 	}
 	
 }
