@@ -30,7 +30,14 @@ public interface OperationService {
 	 */
 	void addWithdrawOperation(Account account, BigDecimal value, String operationId) throws AccountException;
 
-
+	/**
+	 * Get statement for the given account  
+	 * @param account account to get the statement
+	 * @throws AccountException if account does not exists.
+	 * @return statement for the given account
+	 */
+	String getStatement(Account account) throws AccountException;
+	
 	/**
 	 * Compute balance from given account operations  
 	 * @param account account to compute balance

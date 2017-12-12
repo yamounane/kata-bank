@@ -36,6 +36,11 @@ public class OperationServiceImpl implements OperationService {
 	}
 	
 	@Override
+	public String getStatement(Account account) throws AccountException {
+		return null;
+	}
+	
+	@Override
 	public BigDecimal computeBalance(Account account){
 		double debit = getSumOperationFromType(account, OperationType.DEBIT);
 		double credit = getSumOperationFromType(account, OperationType.CREDIT);
@@ -50,7 +55,5 @@ public class OperationServiceImpl implements OperationService {
 									.mapToDouble(operation -> operation.getAmount().doubleValue())
 										.sum();
 	}
-
-
-
+	
 }

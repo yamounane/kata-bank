@@ -29,11 +29,14 @@ public class OperationServiceTest {
 	private final BigDecimal ONE_THOUSAND = new BigDecimal(1000);
 	
 	private final BigDecimal MINUS_ONE_THOUSAND = new BigDecimal(-1000);
+	
+	private String doeAccountStatement;
 
     @Before
     public void setUp() throws Exception {  
     	//Account initilization
     	accountDoe = new Account(DOE_ACCOUNT_ID);
+    	doeAccountStatement = "";
     }	
 
 	@Test
@@ -65,6 +68,19 @@ public class OperationServiceTest {
 		}
 		assertEquals(ONE_THOUSAND, service.computeBalance(accountDoe));
 		assertEquals(ONE_THOUSAND, accountDoe.getBalance());
+	}
+	
+	@Test
+	public void checkStatementForTwoThousandDoeAccount() {	
+		try {
+			service.addDepositOperation(accountDoe, ONE_THOUSAND, "TESTOP010");
+			service.addWithdrawOperation(accountDoe, ONE_THOUSAND, "TESTOP011");
+			service.addDepositOperation(accountDoe, ONE_THOUSAND, "TESTOP012");
+			service.addDepositOperation(accountDoe, ONE_THOUSAND, "TESTOP013");
+		} catch (AccountException e) {
+			fail();
+		}
+		
 	}
 	
 }
