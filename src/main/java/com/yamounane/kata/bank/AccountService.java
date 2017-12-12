@@ -18,6 +18,7 @@ public interface AccountService {
 	 * @param customer customer of the account
 	 * @param accountId account id to print the statement for
 	 * @throws AccountException if customer or account does not exists.
+	 * @return balance for the given customer and account
 	 */
 	BigDecimal getBalance(Customer customer, String accountId) throws AccountException;
 	
