@@ -20,6 +20,16 @@ public interface OperationService {
 	 * @throws AccountException if account does not exists.
 	 */
 	void addDepositOperation(Account account, BigDecimal value, String operationId) throws AccountException;
+	
+	/**
+	 * Add DEBIT operation to given account  
+	 * @param account account to add the DEBIT operation
+	 * @param value value of the operation
+	 * @param operationId id of the operation
+	 * @throws AccountException if account does not exists.
+	 */
+	void addWithdrawOperation(Account account, BigDecimal value, String operationId) throws AccountException;
+
 
 	/**
 	 * Compute balance from given account operations  
