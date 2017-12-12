@@ -21,6 +21,7 @@ public class Account {
 		super();
 		this.id = id;
 		this.operations = new TreeSet<>();
+		this.balance = BigDecimal.ZERO;
 	}
 
 	public String getId() {
