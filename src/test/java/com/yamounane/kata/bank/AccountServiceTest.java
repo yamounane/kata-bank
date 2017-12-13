@@ -34,6 +34,8 @@ public class AccountServiceTest {
 	
 	private final BigDecimal MINUS_ONE_THOUSAND = new BigDecimal(-1000);
 	
+	private final BigDecimal FIVE_THOUSAND = new BigDecimal(5000);
+	
 	private String doeAccountStatementForOneThousand;
 
 	@Before
@@ -69,7 +71,16 @@ public class AccountServiceTest {
 	
 	@Test
 	public void checkBalanceForDoeAccountWithFiveHundred() {
-		fail();
+		try {
+			service.deposit(customerDoe, DOE_ACCOUNT_ID, ONE_THOUSAND, "OP001");
+			service.deposit(customerDoe, DOE_ACCOUNT_ID, ONE_THOUSAND, "OP002");
+			service.deposit(customerDoe, DOE_ACCOUNT_ID, ONE_THOUSAND, "OP003");
+			service.deposit(customerDoe, DOE_ACCOUNT_ID, ONE_THOUSAND, "OP004");
+			service.deposit(customerDoe, DOE_ACCOUNT_ID, ONE_THOUSAND, "OP005");
+			assertEquals(FIVE_THOUSAND, service.getBalance(customerDoe, DOE_ACCOUNT_ID));
+		} catch (AccountException e) {
+			fail();
+		}
 	}
 	
 	@Test
