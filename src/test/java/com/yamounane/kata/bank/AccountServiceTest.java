@@ -1,6 +1,7 @@
 package com.yamounane.kata.bank;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
@@ -36,8 +37,6 @@ public class AccountServiceTest {
 	
 	private final BigDecimal FIVE_THOUSAND = new BigDecimal(5000);
 	
-	private String doeAccountStatementForOneThousand;
-
 	@Before
 	public void setUp() throws Exception {  
     	//John Doe customer & account initilization
@@ -46,9 +45,7 @@ public class AccountServiceTest {
     	List<Account> doeAccounts = new ArrayList<>();
     	doeAccounts.add(accountDoe);
     	customerDoe.setAccounts(doeAccounts);
-    	
-    	doeAccountStatementForOneThousand = "OP001 CREDIT 1 000,00 \n";
-    }	
+     }	
 	
 	@Test
 	public void checkDepositOneThousandOperationForDoeAccount() {
@@ -84,11 +81,15 @@ public class AccountServiceTest {
 	}
 	
 	@Test
-	public void checkStatementForOneThousandDoeAccount() {
+	public void checkStatementForOneThousandDoeAccountIsNotNull() {
 		try {
 			service.deposit(customerDoe, DOE_ACCOUNT_ID, ONE_THOUSAND, "OP001");
+			service.deposit(customerDoe, DOE_ACCOUNT_ID, ONE_THOUSAND, "OP002");
+			service.withdraw(customerDoe, DOE_ACCOUNT_ID, ONE_THOUSAND, "OP003");
+			service.deposit(customerDoe, DOE_ACCOUNT_ID, ONE_THOUSAND, "OP004");
+
 			String statement = service.getStatement(customerDoe, DOE_ACCOUNT_ID);
-			assertEquals(doeAccountStatementForOneThousand, statement);
+			assertNotNull(statement);
 		} catch (AccountException e) {
 			fail();
 		}
