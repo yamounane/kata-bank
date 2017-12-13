@@ -101,7 +101,7 @@ public class Operation implements Comparable<Operation>{
 		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
 														.withLocale(Locale.UK).withZone(ZoneId.systemDefault());
 	    DecimalFormat df = new DecimalFormat("#,###.00");
-		return formatter.format(date) + " " + type.name() + " " + df.format(amount);
+		return formatter.format(date) + " " + id + " " + type.name() + " " + df.format(amount);
 	}
 	
 }

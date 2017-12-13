@@ -33,16 +33,10 @@ public class OperationServiceTest {
 	
 	private final BigDecimal MINUS_ONE_THOUSAND = new BigDecimal(-1000);
 	
-	private String doeAccountStatement;
-
     @Before
     public void setUp() throws Exception {  
     	//Account initilization
     	accountDoe = new Account(DOE_ACCOUNT_ID);
-    	doeAccountStatement = "TESTOP010 CREDIT 1 000,00 \n" + 
-    							"TESTOP011 DEBIT 1 000,00 \n" + 
-								"TESTOP012 CREDIT 1 000,00 \n" + 
-								"TESTOP013 CREDIT 1 000,00 \n";
     }	
 
 	@Test
@@ -83,8 +77,8 @@ public class OperationServiceTest {
 			service.addWithdrawOperation(accountDoe, ONE_THOUSAND, "TESTOP011");
 			service.addDepositOperation(accountDoe, ONE_THOUSAND, "TESTOP012");
 			service.addDepositOperation(accountDoe, ONE_THOUSAND, "TESTOP013");
-			String computedStatement = service.getStatement(accountDoe);
-			assertEquals(doeAccountStatement, computedStatement);
+			String[] computedStatement = service.getStatement(accountDoe).split(";");
+			assertEquals(4, computedStatement.length);
 		} catch (AccountException e) {
 			fail();
 		}
