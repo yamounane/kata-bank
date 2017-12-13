@@ -45,7 +45,7 @@ public class AccountServiceTest {
     	doeAccounts.add(accountDoe);
     	customerDoe.setAccounts(doeAccounts);
     	
-    	doeAccountStatementForOneThousand = "";
+    	doeAccountStatementForOneThousand = "OP001 CREDIT 1 000,00 \n";
     }	
 	
 	@Test
