@@ -28,8 +28,8 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public void printStatement(Customer customer, String accountId) throws AccountException {
-
+	public String getStatement(Customer customer, String accountId) throws AccountException {
+		return null;
 	}
 
 	@Override

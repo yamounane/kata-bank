@@ -33,6 +33,8 @@ public class AccountServiceTest {
 	private final BigDecimal ONE_THOUSAND = new BigDecimal(1000);
 	
 	private final BigDecimal MINUS_ONE_THOUSAND = new BigDecimal(-1000);
+	
+	private String doeAccountStatementForOneThousand;
 
 	@Before
 	public void setUp() throws Exception {  
@@ -42,6 +44,8 @@ public class AccountServiceTest {
     	List<Account> doeAccounts = new ArrayList<>();
     	doeAccounts.add(accountDoe);
     	customerDoe.setAccounts(doeAccounts);
+    	
+    	doeAccountStatementForOneThousand = "";
     }	
 	
 	@Test
@@ -70,7 +74,13 @@ public class AccountServiceTest {
 	
 	@Test
 	public void checkStatementForOneThousandDoeAccount() {
-		fail();
+		try {
+			service.deposit(customerDoe, DOE_ACCOUNT_ID, ONE_THOUSAND, "OP001");
+			String statement = service.getStatement(customerDoe, DOE_ACCOUNT_ID);
+			assertEquals(doeAccountStatementForOneThousand, statement);
+		} catch (AccountException e) {
+			fail();
+		}
 	}
 
 }

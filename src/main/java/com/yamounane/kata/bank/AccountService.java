@@ -27,8 +27,9 @@ public interface AccountService {
 	 * @param customer customer of the account
 	 * @param accountId account id to print the statement for
 	 * @throws AccountException if customer or account does not exists.
+	 * @return statement for account
 	 */
-	void printStatement(Customer customer, String accountId) throws AccountException;
+	String getStatement(Customer customer, String accountId) throws AccountException;
 	
 	/**
 	 * Add an DEBIT operation on account
