@@ -2,7 +2,6 @@ package com.yamounane.kata.bank.model;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 /**
