@@ -1,7 +1,6 @@
 package com.yamounane.kata.bank.service;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.stream.Collectors;
 
@@ -39,11 +38,10 @@ public class OperationServiceImpl implements OperationService {
 	
 	@Override
 	public String getStatement(Account account) throws AccountException {
-	    DecimalFormat amountFormater = new DecimalFormat("#,###.00");
 		String statement = account.getOperations()
 									.stream()
-										.map(operation -> String.format("%s %s %s \n", operation.getId(), operation.getType().name(), amountFormater.format(operation.getAmount())))
-											.collect(Collectors.joining());
+										.map(operation -> operation.toString())
+											.collect(Collectors.joining(";"));
 
 		return statement;
 	}
