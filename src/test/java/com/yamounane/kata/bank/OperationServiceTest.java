@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
 
 import com.yamounane.kata.bank.exception.AccountException;
 import com.yamounane.kata.bank.model.Account;
@@ -18,6 +20,7 @@ import com.yamounane.kata.bank.service.OperationServiceImpl;
  *  
  * @author Yassine Amounane
  */
+@RunWith(BlockJUnit4ClassRunner.class)
 public class OperationServiceTest {
 	
 	OperationService service = new OperationServiceImpl();
@@ -36,7 +39,10 @@ public class OperationServiceTest {
     public void setUp() throws Exception {  
     	//Account initilization
     	accountDoe = new Account(DOE_ACCOUNT_ID);
-    	doeAccountStatement = "";
+    	doeAccountStatement = "TESTOP010 CREDIT 1 000,00 \n" + 
+    							"TESTOP011 DEBIT 1 000,00 \n" + 
+								"TESTOP012 CREDIT 1 000,00 \n" + 
+								"TESTOP013 CREDIT 1 000,00 \n";
     }	
 
 	@Test
@@ -77,10 +83,11 @@ public class OperationServiceTest {
 			service.addWithdrawOperation(accountDoe, ONE_THOUSAND, "TESTOP011");
 			service.addDepositOperation(accountDoe, ONE_THOUSAND, "TESTOP012");
 			service.addDepositOperation(accountDoe, ONE_THOUSAND, "TESTOP013");
+			String computedStatement = service.getStatement(accountDoe);
+			assertEquals(doeAccountStatement, computedStatement);
 		} catch (AccountException e) {
 			fail();
 		}
-		
 	}
 	
 }

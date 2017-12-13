@@ -82,28 +82,18 @@ public class Operation implements Comparable<Operation>{
 		if (getClass() != obj.getClass())
 			return false;
 		Operation other = (Operation) obj;
-		if (amount == null) {
-			if (other.amount != null)
-				return false;
-		} else if (!amount.equals(other.amount))
-			return false;
-		if (date == null) {
-			if (other.date != null)
-				return false;
-		} else if (!date.equals(other.date))
-			return false;
-		if (type != other.type)
+		if(!id.equals(other.getId()))
 			return false;
 		return true;
 	}
 	
 	public int compareTo(Operation op) {
-		if(date.isAfter(op.getDate())) {
-			return 1;
-		} else if(date.isBefore(op.getDate())) {
+		if(id.equals(op.getId())) {
+			return 0;
+		} else if(date.isAfter(op.getDate())) {
 			return -1;
 		}
-		return 0;
+		return 1;
 	}
 
 	@Override

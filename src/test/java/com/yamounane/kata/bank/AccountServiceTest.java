@@ -34,8 +34,8 @@ public class AccountServiceTest {
 	
 	private final BigDecimal MINUS_ONE_THOUSAND = new BigDecimal(-1000);
 
-    @Before
-    public void setUp() throws Exception {  
+	@Before
+	public void setUp() throws Exception {  
     	//John Doe customer & account initilization
     	customerDoe = new Customer("C001", "John", "Doe");
     	accountDoe = new Account(DOE_ACCOUNT_ID);
