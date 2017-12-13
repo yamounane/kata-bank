@@ -1,8 +1,10 @@
 package com.yamounane.kata.bank.service;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.yamounane.kata.bank.AccountService;
 import com.yamounane.kata.bank.exception.AccountException;
@@ -33,7 +35,10 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public String getStatement(Customer customer, String accountId) throws AccountException {
 		if(customer != null && accountId != null && !accountId.isEmpty()) {
-			return operationService.getStatement(getAccount(customer, accountId));
+			List<String> statements = Arrays.asList(operationService.getStatement(getAccount(customer, accountId)).split(";"));
+			return statements.stream()
+								.map(statement -> statement + "\n")
+									.collect(Collectors.joining());
 		}
 		throw new AccountException(String.format("Unable to retrieve a statement because account %s or customer %s are null", accountId, customer));
 	}
