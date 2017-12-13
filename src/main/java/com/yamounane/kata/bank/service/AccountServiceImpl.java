@@ -29,7 +29,10 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public String getStatement(Customer customer, String accountId) throws AccountException {
-		return null;
+		if(customer != null && accountId != null && !accountId.isEmpty()) {
+			return operationService.getStatement(getAccount(customer, accountId));
+		}
+		throw new AccountException(String.format("Unable to retrieve a statement because account %s or customer %s are null", accountId, customer));
 	}
 
 	@Override
