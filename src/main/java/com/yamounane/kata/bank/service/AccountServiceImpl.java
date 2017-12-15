@@ -56,14 +56,13 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public void deposit(Customer customer, String accountId, BigDecimal amount, String operationId)
+	public void deposit(Customer customer, Account account, BigDecimal amount, String operationId)
 			throws AccountException {
-		if(customer != null && accountId != null && !accountId.isEmpty()) {
-			Account customerAccount = getAccount(customer, accountId);
-			operationService.addDepositOperation(customerAccount, amount, operationId);
+		if(customer != null && account != null) {
+			operationService.addDepositOperation(account, amount, operationId);
 			return;
 		}
-		throw new AccountException(String.format("Unable to make a deposit because account %s or customer %s are null", accountId, customer));
+		throw new AccountException(String.format("Unable to make a deposit because account %s or customer %s are null", account, customer));
 	}
 
 	private Account getAccount(Customer customer, String accountId) throws AccountException {

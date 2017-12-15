@@ -3,6 +3,7 @@ package com.yamounane.kata.bank;
 import java.math.BigDecimal;
 
 import com.yamounane.kata.bank.exception.AccountException;
+import com.yamounane.kata.bank.model.Account;
 import com.yamounane.kata.bank.model.Customer;
 
 /**
@@ -48,6 +49,6 @@ public interface AccountService {
 	 * @param operationId id of the operation
 	 * @throws AccountException if customer or account does not exists or if the operation is not possible
 	 */
-	void deposit(Customer customer, String accountId, BigDecimal amount, String operationId) throws AccountException;
+	void deposit(Customer customer, Account account, BigDecimal amount, String operationId) throws AccountException;
 
 }

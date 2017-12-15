@@ -32,9 +32,10 @@ public class AccountServiceTest {
 
 	private Customer johnDoe;
 
-	private Account johnDoeAccount;
+	private Account firstAccount;
+	private Account secondAccount;
 
-	private final String DOE_ACCOUNT_ID = "A001";
+	private final String DOE_ACCOUNT_ID = "A002";
 
 	private final BigDecimal _1000 = new BigDecimal(1000);
 
@@ -42,41 +43,51 @@ public class AccountServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		johnDoe = new Customer("C001", "John", "Doe");
-		johnDoeAccount = new Account(DOE_ACCOUNT_ID, johnDoe);
+		johnDoe = new Customer("John", "Doe");
+		firstAccount = johnDoe.getAccounts().iterator().next();
+		secondAccount = new Account(DOE_ACCOUNT_ID, johnDoe);
 	}
 
 	@Test
 	public void should_account_balance_increase_when_deposit_occur() throws AccountException {
-		service.deposit(johnDoe, DOE_ACCOUNT_ID, _1000, "OP001");
+		service.deposit(johnDoe, secondAccount, _1000, "OP001");
 
-		assertThat(johnDoeAccount.getBalance()).isEqualTo(_1000);
+		assertThat(secondAccount.getBalance()).isEqualTo(_1000);
+	}
+
+	@Test
+	public void should_deposit_increase_account_specified_without_impacting_other_accounts() throws AccountException {
+		BigDecimal secondAccountBalance = secondAccount.getBalance();
+		
+		service.deposit(johnDoe, firstAccount, _1000, "OP001");
+
+		assertThat(secondAccount.getBalance()).isEqualTo(secondAccountBalance);
 	}
 
 	@Test
 	public void should_withdrawal_be_allowed_even_if_balance_becomes_negative() throws AccountException {
 		service.withdraw(johnDoe, DOE_ACCOUNT_ID, _1000, "OP002");
 
-		assertThat(johnDoeAccount.getBalance()).isEqualTo(_1000.negate());
+		assertThat(secondAccount.getBalance()).isEqualTo(_1000.negate());
 	}
 
 	@Test
 	public void checkBalanceForDoeAccountWithFiveHundred() throws AccountException {
-		service.deposit(johnDoe, DOE_ACCOUNT_ID, _1000, "OP001");
-		service.deposit(johnDoe, DOE_ACCOUNT_ID, _1000, "OP002");
-		service.deposit(johnDoe, DOE_ACCOUNT_ID, _1000, "OP003");
-		service.deposit(johnDoe, DOE_ACCOUNT_ID, _1000, "OP004");
-		service.deposit(johnDoe, DOE_ACCOUNT_ID, _1000, "OP005");
+		service.deposit(johnDoe, secondAccount, _1000, "OP001");
+		service.deposit(johnDoe, secondAccount, _1000, "OP002");
+		service.deposit(johnDoe, secondAccount, _1000, "OP003");
+		service.deposit(johnDoe, secondAccount, _1000, "OP004");
+		service.deposit(johnDoe, secondAccount, _1000, "OP005");
 
-		assertThat(johnDoeAccount.getBalance()).isEqualTo(_5000);
+		assertThat(secondAccount.getBalance()).isEqualTo(_5000);
 	}
 
 	@Test
 	public void checkStatementForOneThousandDoeAccountIsNotNull() throws AccountException {
-		service.deposit(johnDoe, DOE_ACCOUNT_ID, _1000, "OP001");
-		service.deposit(johnDoe, DOE_ACCOUNT_ID, _1000, "OP002");
+		service.deposit(johnDoe, secondAccount, _1000, "OP001");
+		service.deposit(johnDoe, secondAccount, _1000, "OP002");
 		service.withdraw(johnDoe, DOE_ACCOUNT_ID, _1000, "OP003");
-		service.deposit(johnDoe, DOE_ACCOUNT_ID, _1000, "OP004");
+		service.deposit(johnDoe, secondAccount, _1000, "OP004");
 
 		String statement = service.getStatement(johnDoe, DOE_ACCOUNT_ID);
 

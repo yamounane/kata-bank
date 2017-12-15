@@ -2,6 +2,7 @@ package com.yamounane.kata.bank.model;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Customer's Class
@@ -18,9 +19,9 @@ public class Customer {
 	
 	private Set<Account> accounts = new HashSet<>();
 	
-	public Customer(String id, String lastname, String firstname) {
+	public Customer(String lastname, String firstname) {
 		super();
-		this.id = id;
+		this.id = UUID.randomUUID().toString();
 		this.lastname = lastname;
 		this.firstname = firstname;
 		this.accounts.add(new Account(id, this));

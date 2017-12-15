@@ -36,7 +36,7 @@ public class OperationServiceTest {
 	
     @Before
     public void setUp() throws Exception {  
-    	Customer johnDoe = new Customer("C001", "John", "Doe");
+    	Customer johnDoe = new Customer("John", "Doe");
     	accountDoe = new Account(DOE_ACCOUNT_ID, johnDoe);
     }	
 
