@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.yamounane.kata.bank.AccountService;
@@ -20,8 +21,8 @@ public class AccountServiceImpl implements AccountService {
 	
 	private OperationService operationService;
 
-	public AccountServiceImpl() {
-		this.operationService = new OperationServiceImpl();
+	public AccountServiceImpl(OperationService operationService) {
+		this.operationService = operationService;
 	}
 	
 	@Override
@@ -74,7 +75,7 @@ public class AccountServiceImpl implements AccountService {
 		throw new AccountException(String.format("Unable to get Account because account %s doesn't exist for customer %s", accountId, customer));
 	}
 
-	private Account getSelectedAccountFromCustomerAccounts(List<Account> accounts, String accountId) {
+	private Account getSelectedAccountFromCustomerAccounts(Set<Account> accounts, String accountId) {
 		Optional<Account> optAccount = accounts.
 											stream()
 												.filter(account -> account.getId().equals(accountId))

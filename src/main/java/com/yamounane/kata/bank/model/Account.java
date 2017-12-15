@@ -2,7 +2,9 @@ package com.yamounane.kata.bank.model;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 /**
  * Account Class
@@ -16,12 +18,16 @@ public class Account {
 	private BigDecimal balance;
 	
 	private LinkedHashSet<Operation> operations;
+
+	private Customer customer;
 	
-	public Account(String id) {
+	public Account(String id, Customer customer) {
 		super();
 		this.id = id;
 		this.operations = new LinkedHashSet<>();
 		this.balance = BigDecimal.ZERO;
+		this.customer = customer;
+		this.customer.getAccounts().add(this);
 	}
 
 	public String getId() {
@@ -46,6 +52,10 @@ public class Account {
 
 	public void setOperations(LinkedHashSet<Operation> operations) {
 		this.operations = operations;
+	}
+	
+	public Customer getCustomer() {
+		return customer;
 	}
 
 	@Override

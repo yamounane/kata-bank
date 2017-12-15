@@ -12,6 +12,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 
 import com.yamounane.kata.bank.exception.AccountException;
 import com.yamounane.kata.bank.model.Account;
+import com.yamounane.kata.bank.model.Customer;
 import com.yamounane.kata.bank.service.OperationService;
 import com.yamounane.kata.bank.service.OperationServiceImpl;
 
@@ -35,8 +36,8 @@ public class OperationServiceTest {
 	
     @Before
     public void setUp() throws Exception {  
-    	//Account initilization
-    	accountDoe = new Account(DOE_ACCOUNT_ID);
+    	Customer johnDoe = new Customer("C001", "John", "Doe");
+    	accountDoe = new Account(DOE_ACCOUNT_ID, johnDoe);
     }	
 
 	@Test

@@ -1,6 +1,7 @@
 package com.yamounane.kata.bank.model;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Customer's Class
@@ -15,13 +16,14 @@ public class Customer {
 	
 	private String firstname;
 	
-	private List<Account> accounts;
+	private Set<Account> accounts = new HashSet<>();
 	
 	public Customer(String id, String lastname, String firstname) {
 		super();
 		this.id = id;
 		this.lastname = lastname;
 		this.firstname = firstname;
+		this.accounts.add(new Account(id, this));
 	}
 
 	public String getId() {
@@ -48,12 +50,8 @@ public class Customer {
 		this.firstname = firstname;
 	}
 	
-	public List<Account> getAccounts() {
+	public Set<Account> getAccounts() {
 		return accounts;
-	}
-
-	public void setAccounts(List<Account> accounts) {
-		this.accounts = accounts;
 	}
 
 	@Override

@@ -2,7 +2,7 @@
 Solution regarding @abachar's kata : https://gist.github.com/abachar/d20bdcd07dac589feef8ef21b487648c
 
 # Kata's requirements
-- Money deposit and dithdrawal
+- Money deposit and withdrawal
 - Account statement with date, amount & balance
 - Statement printing
 
@@ -10,7 +10,7 @@ Solution regarding @abachar's kata : https://gist.github.com/abachar/d20bdcd07da
 
 To build this project, run :
 ```sh
-$ mvn -clean install
+$ mvn install
 ```
 
 Use this command to run tests :
