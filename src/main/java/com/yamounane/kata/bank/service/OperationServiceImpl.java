@@ -19,8 +19,7 @@ public class OperationServiceImpl implements OperationService {
 	@Override
 	public void addDepositOperation(Account account, BigDecimal value, String operationId) throws AccountException {
 		if(value.compareTo(BigDecimal.ZERO) != 0) {
-			Operation operation = new Operation(operationId, OperationType.CREDIT, Instant.now(), value.abs());
-			account.getOperations().add(operation);
+			account.getOperations().add(new Operation(operationId, OperationType.CREDIT, Instant.now(), value.abs()));
 			computeBalance(account);
 		}
 	}
@@ -28,8 +27,7 @@ public class OperationServiceImpl implements OperationService {
 	@Override
 	public void addWithdrawOperation(Account account, BigDecimal value, String operationId) throws AccountException {
 		if(value.compareTo(BigDecimal.ZERO) != 0) {
-			Operation operation = new Operation(operationId, OperationType.DEBIT, Instant.now(), value.abs());
-			account.getOperations().add(operation);
+			account.getOperations().add(new Operation(operationId, OperationType.DEBIT, Instant.now(), value.abs()));
 			computeBalance(account);
 		}
 	}
@@ -48,7 +46,9 @@ public class OperationServiceImpl implements OperationService {
 	public BigDecimal computeBalance(Account account){
 		double debit = getSumOperationFromType(account, OperationType.DEBIT);
 		double credit = getSumOperationFromType(account, OperationType.CREDIT);
+		
 		account.setBalance(new BigDecimal(credit - debit));
+		
 		return account.getBalance(); 
 	}
 	

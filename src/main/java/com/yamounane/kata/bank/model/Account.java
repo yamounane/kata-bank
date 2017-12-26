@@ -2,9 +2,7 @@ package com.yamounane.kata.bank.model;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 
 /**
  * Account Class
