@@ -1,7 +1,7 @@
 package com.yamounane.kata.bank;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
 
@@ -28,61 +28,46 @@ public class OperationServiceTest {
 		
 	private Account accountDoe;
 	
-	private final String DOE_ACCOUNT_ID = "A001";
-	
-	private final BigDecimal ONE_THOUSAND = new BigDecimal(1000);
-	
-	private final BigDecimal MINUS_ONE_THOUSAND = new BigDecimal(-1000);
+	private final BigDecimal _1000 = new BigDecimal(1000);	
 	
     @Before
     public void setUp() throws Exception {  
     	Customer johnDoe = new Customer("John", "Doe");
-    	accountDoe = new Account(DOE_ACCOUNT_ID, johnDoe);
+    	accountDoe = new Account("A001", johnDoe);
     }	
 
 	@Test
-	public void checkAddDepositOperationOfOneThousandForDoeAccount() {
-		try {
-			service.addDepositOperation(accountDoe, ONE_THOUSAND, "TESTOP001");
-		} catch (AccountException e) {
-			fail();
-		}
-		assertEquals(ONE_THOUSAND, accountDoe.getBalance());
+	public void should_balance_increase_when_deposit_operation_occur() throws AccountException{
+		service.addDepositOperation(accountDoe, _1000, "TESTOP001");
+
+		assertThat(accountDoe.getBalance()).isEqualTo(_1000);
 	}
 	
 	@Test
-	public void checkAddWithdrawOperationOfOneThousandForDoeAccount() {
-		try {
-			service.addWithdrawOperation(accountDoe, ONE_THOUSAND, "TESTOP002");
-		} catch (AccountException e) {
-			fail();
-		}
-		assertEquals(MINUS_ONE_THOUSAND, accountDoe.getBalance());
+	public void should_balance_decrease_when_withdrawal_operation_occur() throws AccountException {
+		service.addWithdrawOperation(accountDoe, _1000, "TESTOP002");
+
+		assertThat(accountDoe.getBalance()).isEqualTo(_1000.negate());
 	}
 	
 	@Test
-	public void checkComputeBalanceForOneThousandDoeAccount() {	
-		try {
-			service.addDepositOperation(accountDoe, ONE_THOUSAND, "TESTOP003");
-		} catch (AccountException e) {
-			fail();
-		}
-		assertEquals(ONE_THOUSAND, service.computeBalance(accountDoe));
-		assertEquals(ONE_THOUSAND, accountDoe.getBalance());
+	public void should_compute_balance_increase_when_deposit_operation_occur() throws AccountException {	
+		service.addDepositOperation(accountDoe, _1000, "TESTOP003");
+
+		assertThat(service.computeBalance(accountDoe)).isEqualTo(_1000);
+		assertThat(accountDoe.getBalance()).isEqualTo(_1000);
 	}
 	
 	@Test
-	public void checkStatementForTwoThousandDoeAccount() {	
-		try {
-			service.addDepositOperation(accountDoe, ONE_THOUSAND, "TESTOP010");
-			service.addWithdrawOperation(accountDoe, ONE_THOUSAND, "TESTOP011");
-			service.addDepositOperation(accountDoe, ONE_THOUSAND, "TESTOP012");
-			service.addDepositOperation(accountDoe, ONE_THOUSAND, "TESTOP013");
-			String[] computedStatement = service.getStatement(accountDoe).split(";");
-			assertEquals(4, computedStatement.length);
-		} catch (AccountException e) {
-			fail();
-		}
+	public void should_statement_operations_number_right_when_multiple_operations_are_made() throws AccountException {	
+		service.addDepositOperation(accountDoe, _1000, "TESTOP010");
+		service.addWithdrawOperation(accountDoe, _1000, "TESTOP011");
+		service.addDepositOperation(accountDoe, _1000, "TESTOP012");
+		service.addDepositOperation(accountDoe, _1000, "TESTOP013");
+		
+		String[] computedStatement = service.getStatement(accountDoe).split(";");
+		
+		assertEquals(4, computedStatement.length);
 	}
 	
 }

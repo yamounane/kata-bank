@@ -26,21 +26,17 @@ public class AccountServiceTest {
 	private AccountService service = new AccountServiceImpl(operationServiceMock);
 
 	private Customer johnDoe;
-
 	private Account firstAccount;
 	private Account secondAccount;
 
-	private final String DOE_ACCOUNT_ID = "A002";
-
 	private final BigDecimal _1000 = new BigDecimal(1000);
-
 	private final BigDecimal _5000 = new BigDecimal(5000);
 
 	@Before
 	public void setUp() throws Exception {
 		johnDoe = new Customer("John", "Doe");
 		firstAccount = johnDoe.getAccounts().iterator().next();
-		secondAccount = new Account(DOE_ACCOUNT_ID, johnDoe);
+		secondAccount = new Account("A002", johnDoe);
 	}
 
 	@Test

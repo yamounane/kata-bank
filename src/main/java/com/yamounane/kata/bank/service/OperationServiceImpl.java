@@ -18,7 +18,6 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	public void addDepositOperation(Account account, BigDecimal value, String operationId) throws AccountException {
-		// Ignore operation with amount = 0
 		if(value.compareTo(BigDecimal.ZERO) != 0) {
 			Operation operation = new Operation(operationId, OperationType.CREDIT, Instant.now(), value.abs());
 			account.getOperations().add(operation);
@@ -28,7 +27,6 @@ public class OperationServiceImpl implements OperationService {
 	
 	@Override
 	public void addWithdrawOperation(Account account, BigDecimal value, String operationId) throws AccountException {
-		// Ignore operation with amount = 0
 		if(value.compareTo(BigDecimal.ZERO) != 0) {
 			Operation operation = new Operation(operationId, OperationType.DEBIT, Instant.now(), value.abs());
 			account.getOperations().add(operation);
