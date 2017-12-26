@@ -47,9 +47,7 @@ public class OperationServiceImpl implements OperationService {
 		double debit = getSumOperationFromType(account, OperationType.DEBIT);
 		double credit = getSumOperationFromType(account, OperationType.CREDIT);
 		
-		account.setBalance(new BigDecimal(credit - debit));
-		
-		return account.getBalance(); 
+		return new BigDecimal(credit - debit);
 	}
 	
 	private double getSumOperationFromType(Account account, OperationType type) {

@@ -27,7 +27,8 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public BigDecimal getBalance(Customer customer, Account account) throws AccountException {
 		if(customer != null && account != null) {
-			return operationService.computeBalance(account);
+			account.setBalance(operationService.computeBalance(account));
+			return account.getBalance();
 		}
 		
 		throw new AccountException(String.format("Unable to get because account %s or customer %s are null", account, customer));
