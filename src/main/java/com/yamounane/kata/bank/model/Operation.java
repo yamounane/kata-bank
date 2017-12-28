@@ -7,21 +7,30 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
+import java.util.UUID;
 
 /**
  * Operation Class
  * 
  * @author Yassine Amounane
  */
-public class Operation implements Comparable<Operation>{
-	
+public class Operation implements Comparable<Operation> {
+
 	private String id;
-	
+
 	private OperationType type;
-	
+
 	private Instant date;
-	
+
 	private BigDecimal amount;
+
+	public Operation(OperationType type, BigDecimal amount) {
+		super();
+		this.id = UUID.randomUUID().toString();
+		this.type = type;
+		this.date = Instant.now();
+		this.amount = amount;
+	}
 	
 	public Operation(String id, OperationType type, Instant date, BigDecimal amount) {
 		super();
@@ -82,15 +91,15 @@ public class Operation implements Comparable<Operation>{
 		if (getClass() != obj.getClass())
 			return false;
 		Operation other = (Operation) obj;
-		if(!id.equals(other.getId()))
+		if (!id.equals(other.getId()))
 			return false;
 		return true;
 	}
-	
+
 	public int compareTo(Operation op) {
-		if(id.equals(op.getId())) {
+		if (id.equals(op.getId())) {
 			return 0;
-		} else if(date.isAfter(op.getDate())) {
+		} else if (date.toEpochMilli() > op.getDate().toEpochMilli()) {
 			return -1;
 		}
 		return 1;
@@ -98,10 +107,10 @@ public class Operation implements Comparable<Operation>{
 
 	@Override
 	public String toString() {
-		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
-														.withLocale(Locale.UK).withZone(ZoneId.systemDefault());
-	    DecimalFormat df = new DecimalFormat("#,###.00");
+		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).withLocale(Locale.UK)
+				.withZone(ZoneId.systemDefault());
+		DecimalFormat df = new DecimalFormat("#,###.00");
 		return formatter.format(date) + " " + id + " " + type.name() + " " + df.format(amount);
 	}
-	
+
 }

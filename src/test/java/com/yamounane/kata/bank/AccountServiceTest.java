@@ -11,6 +11,7 @@ import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -33,6 +34,7 @@ public class AccountServiceTest {
 
 	@Mock
 	private OperationService operationServiceMock;
+	@InjectMocks
 	private AccountService service = new AccountServiceImpl(operationServiceMock);
 
 	private Customer johnDoe;
@@ -72,7 +74,7 @@ public class AccountServiceTest {
 
 	@Test
 	public void should_withdrawal_be_allowed_even_if_balance_becomes_negative() throws AccountException {
-		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
+		Mockito.when(operationServiceMock.addWithdrawOperation(any(BigDecimal.class), any(String.class)))
 				.thenReturn(new Operation(UUID.randomUUID().toString(), OperationType.DEBIT, Instant.now(), _1000));
 
 		service.withdraw(johnDoe, secondAccount, _1000);
@@ -86,9 +88,21 @@ public class AccountServiceTest {
 				.thenReturn(new Operation(UUID.randomUUID().toString(), OperationType.CREDIT, Instant.now(), _1000));
 
 		service.deposit(johnDoe, secondAccount, _1000);
+
+		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
+				.thenReturn(new Operation(UUID.randomUUID().toString(), OperationType.CREDIT, Instant.now(), _1000));
 		service.deposit(johnDoe, secondAccount, _1000);
+
+		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
+				.thenReturn(new Operation(UUID.randomUUID().toString(), OperationType.CREDIT, Instant.now(), _1000));
 		service.deposit(johnDoe, secondAccount, _1000);
+
+		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
+				.thenReturn(new Operation(UUID.randomUUID().toString(), OperationType.CREDIT, Instant.now(), _1000));
 		service.deposit(johnDoe, secondAccount, _1000);
+
+		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
+				.thenReturn(new Operation(UUID.randomUUID().toString(), OperationType.CREDIT, Instant.now(), _1000));
 		service.deposit(johnDoe, secondAccount, _1000);
 
 		assertThat(secondAccount.getBalance()).isEqualTo(_5000);
@@ -97,17 +111,25 @@ public class AccountServiceTest {
 	@Test
 	public void should_statement_not_be_empty_when_printing_it() throws AccountException {
 		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
-				.thenReturn(new Operation(UUID.randomUUID().toString(), OperationType.CREDIT, Instant.now(), _1000));
-		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
-				.thenReturn(new Operation(UUID.randomUUID().toString(), OperationType.DEBIT, Instant.now(), _1000));
+				.thenReturn(new Operation(OperationType.CREDIT, _1000));
+		service.deposit(johnDoe, secondAccount, _1000);
 
+		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
+				.thenReturn(new Operation(OperationType.CREDIT, _1000));
 		service.deposit(johnDoe, secondAccount, _1000);
-		service.deposit(johnDoe, secondAccount, _1000);
+
+		Mockito.when(operationServiceMock.addWithdrawOperation(any(BigDecimal.class), any(String.class)))
+				.thenReturn(new Operation(OperationType.DEBIT, _1000));
 		service.withdraw(johnDoe, secondAccount, _1000);
+
+		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
+				.thenReturn(new Operation(OperationType.CREDIT, _1000));
 		service.deposit(johnDoe, secondAccount, _1000);
 
 		String statement = service.getStatement(johnDoe, secondAccount);
-
+		
+		System.out.println(statement);
+		
 		assertNotNull(statement);
 	}
 
