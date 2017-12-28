@@ -1,5 +1,5 @@
 # Bank Account Kata
-Solution regarding @abachar's kata : https://gist.github.com/abachar/d20bdcd07dac589feef8ef21b487648c
+My solution regarding @abachar's kata : https://gist.github.com/abachar/d20bdcd07dac589feef8ef21b487648c
 
 # Kata's requirements
 - Money deposit and withdrawal
