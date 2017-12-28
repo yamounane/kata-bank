@@ -99,7 +99,7 @@ public class Operation implements Comparable<Operation> {
 	public int compareTo(Operation op) {
 		if (id.equals(op.getId())) {
 			return 0;
-		} else if (date.toEpochMilli() > op.getDate().toEpochMilli()) {
+		} else if (date.isAfter(op.getDate())) {
 			return -1;
 		}
 		return 1;
