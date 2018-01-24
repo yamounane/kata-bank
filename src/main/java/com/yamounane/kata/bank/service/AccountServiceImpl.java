@@ -67,10 +67,14 @@ public class AccountServiceImpl implements AccountService {
 			throw new AccountException(String
 					.format("Unable to make a deposit because account %s or customer %s are null", account, customer));
 		}
-		
+
 		Operation depositOperation = operationService.addDepositOperation(amount, UUID.randomUUID().toString());
-		account.getOperations().add(depositOperation);
-		computeBalance(account);
+
+		if (depositOperation != null) {
+			account.getOperations().add(depositOperation);
+			computeBalance(account);
+		}
+
 		return;
 	}
 
