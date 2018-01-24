@@ -127,7 +127,7 @@ public class AccountServiceTest {
 		repeat(3, () -> doDepositOperationMockWithIdFor(johnDoe, secondAccount, _1000, depositInstant));
 		repeat(2, () -> doWithdrawalOperationMockWithIdFor(johnDoe, secondAccount, _1000, withdrawInstant));
 		String statement = service.getStatement(johnDoe, secondAccount);
-		
+
 		assertThat(statement).isEqualTo(printStatement(depositInstant, 3, _1000, withdrawInstant, 2, _1000));
 	}
 
@@ -139,14 +139,14 @@ public class AccountServiceTest {
 		DecimalFormat df = new DecimalFormat("#,###.00");
 
 		int operationIdInit = 0;
-		for (;operationIdInit < depositNumber; operationIdInit++) {
-			statement += formatter.format(depositInstant) + " " + operationIdInit + " " + OperationType.CREDIT.name() + " "
-					+ df.format(depositAmount) + "\n";
+		for (; operationIdInit < depositNumber; operationIdInit++) {
+			statement += formatter.format(depositInstant) + " " + operationIdInit + " " + OperationType.CREDIT.name()
+					+ " " + df.format(depositAmount) + "\n";
 		}
 
 		for (int i = 0; i < withdrawNumber; i++) {
-			statement += formatter.format(withdrawInstant) + " " + operationIdInit + " " + OperationType.DEBIT.name() + " "
-					+ df.format(withdrawAmount) + "\n";
+			statement += formatter.format(withdrawInstant) + " " + operationIdInit + " " + OperationType.DEBIT.name()
+					+ " " + df.format(withdrawAmount) + "\n";
 			operationIdInit++;
 		}
 
@@ -155,10 +155,9 @@ public class AccountServiceTest {
 
 	private void doDepositOperationMockFor(Customer customer, Account account, BigDecimal amount,
 			Instant operationTime) {
+		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
+				.thenReturn(new Operation(UUID.randomUUID().toString(), OperationType.CREDIT, operationTime, amount));
 		try {
-			Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class))).thenReturn(
-					new Operation(UUID.randomUUID().toString(), OperationType.CREDIT, operationTime, amount));
-
 			service.deposit(customer, account, amount);
 		} catch (Exception e) {
 		}
@@ -166,19 +165,19 @@ public class AccountServiceTest {
 
 	private void doDepositOperationMockWithIdFor(Customer customer, Account account, BigDecimal amount,
 			Instant operationTime) {
+		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class))).thenReturn(
+				new Operation(String.valueOf(operationIdIncrement++), OperationType.CREDIT, operationTime, amount));
 		try {
-			Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
-					.thenReturn(new Operation(String.valueOf(operationIdIncrement++), OperationType.CREDIT, operationTime, amount));
 			service.deposit(customer, account, amount);
-		} catch (Exception e) {
+		} catch (AccountException e) {
 		}
 	}
 
 	private void doWithdrawalOperationMockWithIdFor(Customer customer, Account account, BigDecimal amount,
 			Instant operationTime) {
+		Mockito.when(operationServiceMock.addWithdrawOperation(any(BigDecimal.class), any(String.class))).thenReturn(
+				new Operation(String.valueOf(operationIdIncrement++), OperationType.DEBIT, operationTime, amount));
 		try {
-			Mockito.when(operationServiceMock.addWithdrawOperation(any(BigDecimal.class), any(String.class)))
-					.thenReturn(new Operation(String.valueOf(operationIdIncrement++), OperationType.DEBIT, operationTime, amount));
 			service.withdraw(customer, account, amount);
 		} catch (Exception e) {
 		}
