@@ -1,11 +1,16 @@
 package com.yamounane.kata.bank;
 
+import static java.util.stream.IntStream.range;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Locale;
 import java.util.UUID;
 
 import org.junit.Before;
@@ -45,11 +50,14 @@ public class AccountServiceTest {
 	private final BigDecimal _1000 = new BigDecimal(1000);
 	private final BigDecimal _5000 = new BigDecimal(5000);
 
+	private Integer operationIdIncrement;
+
 	@Before
 	public void setUp() throws Exception {
 		johnDoe = new Customer("John", "Doe");
 		firstAccount = johnDoe.getAccounts().iterator().next();
 		secondAccount = new Account("A002", johnDoe);
+		operationIdIncrement = 0;
 	}
 
 	@Test
@@ -61,7 +69,7 @@ public class AccountServiceTest {
 
 		assertThat(secondAccount.getBalance()).isEqualTo(_1000);
 	}
-	
+
 	@Test
 	public void should_account_balance_stay_unchanged_when_deposit_of_zero_occurs() throws AccountException {
 		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
@@ -71,9 +79,10 @@ public class AccountServiceTest {
 
 		assertThat(secondAccount.getBalance()).isEqualTo(_0);
 	}
-	
+
 	@Test
-	public void should_deposit_increase_account_specified_without_impacting_other_accounts() throws AccountException {
+	public void should_account_balance_increase_account_specified_without_impacting_other_accounts()
+			throws AccountException {
 		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
 				.thenReturn(new Operation(UUID.randomUUID().toString(), OperationType.CREDIT, Instant.now(), _1000));
 		BigDecimal secondAccountBalance = secondAccount.getBalance();
@@ -92,9 +101,9 @@ public class AccountServiceTest {
 
 		assertThat(secondAccount.getBalance()).isEqualTo(_1000.negate());
 	}
-	
+
 	@Test
-	public void should_balance_stay_unchanged_when_withdrawal_of_zero_occur() throws AccountException {
+	public void should_account_balance_stay_unchanged_when_withdrawal_of_zero_occur() throws AccountException {
 		Mockito.when(operationServiceMock.addWithdrawOperation(any(BigDecimal.class), any(String.class)))
 				.thenReturn(null);
 
@@ -104,54 +113,79 @@ public class AccountServiceTest {
 	}
 
 	@Test
-	public void should_balance_increase_when_multiple_deposit() throws AccountException {
-		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
-				.thenReturn(new Operation(UUID.randomUUID().toString(), OperationType.CREDIT, Instant.now(), _1000));
-
-		service.deposit(johnDoe, secondAccount, _1000);
-
-		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
-				.thenReturn(new Operation(UUID.randomUUID().toString(), OperationType.CREDIT, Instant.now(), _1000));
-		service.deposit(johnDoe, secondAccount, _1000);
-
-		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
-				.thenReturn(new Operation(UUID.randomUUID().toString(), OperationType.CREDIT, Instant.now(), _1000));
-		service.deposit(johnDoe, secondAccount, _1000);
-
-		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
-				.thenReturn(new Operation(UUID.randomUUID().toString(), OperationType.CREDIT, Instant.now(), _1000));
-		service.deposit(johnDoe, secondAccount, _1000);
-
-		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
-				.thenReturn(new Operation(UUID.randomUUID().toString(), OperationType.CREDIT, Instant.now(), _1000));
-		service.deposit(johnDoe, secondAccount, _1000);
+	public void should_account_balance_increase_when_multiple_deposit() throws AccountException {
+		repeat(5, () -> doDepositOperationMockFor(johnDoe, secondAccount, _1000, Instant.now()));
 
 		assertThat(secondAccount.getBalance()).isEqualTo(_5000);
 	}
 
 	@Test
 	public void should_statement_not_be_empty_when_printing_it() throws AccountException {
-		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
-				.thenReturn(new Operation(OperationType.CREDIT, _1000));
-		service.deposit(johnDoe, secondAccount, _1000);
+		Instant depositInstant = Instant.now();
+		Instant withdrawInstant = Instant.now();
 
-		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
-				.thenReturn(new Operation(OperationType.CREDIT, _1000));
-		service.deposit(johnDoe, secondAccount, _1000);
-
-		Mockito.when(operationServiceMock.addWithdrawOperation(any(BigDecimal.class), any(String.class)))
-				.thenReturn(new Operation(OperationType.DEBIT, _1000));
-		service.withdraw(johnDoe, secondAccount, _1000);
-
-		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
-				.thenReturn(new Operation(OperationType.CREDIT, _1000));
-		service.deposit(johnDoe, secondAccount, _1000);
-
+		repeat(3, () -> doDepositOperationMockWithIdFor(johnDoe, secondAccount, _1000, depositInstant));
+		repeat(2, () -> doWithdrawalOperationMockWithIdFor(johnDoe, secondAccount, _1000, withdrawInstant));
 		String statement = service.getStatement(johnDoe, secondAccount);
 		
-		System.out.println(statement);
-		
-		assertNotNull(statement);
+		assertThat(statement).isEqualTo(printStatement(depositInstant, 3, _1000, withdrawInstant, 2, _1000));
+	}
+
+	private String printStatement(Instant depositInstant, int depositNumber, BigDecimal depositAmount,
+			Instant withdrawInstant, int withdrawNumber, BigDecimal withdrawAmount) {
+		String statement = "";
+		DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).withLocale(Locale.UK)
+				.withZone(ZoneId.systemDefault());
+		DecimalFormat df = new DecimalFormat("#,###.00");
+
+		int operationIdInit = 0;
+		for (;operationIdInit < depositNumber; operationIdInit++) {
+			statement += formatter.format(depositInstant) + " " + operationIdInit + " " + OperationType.CREDIT.name() + " "
+					+ df.format(depositAmount) + "\n";
+		}
+
+		for (int i = 0; i < withdrawNumber; i++) {
+			statement += formatter.format(withdrawInstant) + " " + operationIdInit + " " + OperationType.DEBIT.name() + " "
+					+ df.format(withdrawAmount) + "\n";
+			operationIdInit++;
+		}
+
+		return statement;
+	}
+
+	private void doDepositOperationMockFor(Customer customer, Account account, BigDecimal amount,
+			Instant operationTime) {
+		try {
+			Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class))).thenReturn(
+					new Operation(UUID.randomUUID().toString(), OperationType.CREDIT, operationTime, amount));
+
+			service.deposit(customer, account, amount);
+		} catch (Exception e) {
+		}
+	}
+
+	private void doDepositOperationMockWithIdFor(Customer customer, Account account, BigDecimal amount,
+			Instant operationTime) {
+		try {
+			Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
+					.thenReturn(new Operation(String.valueOf(operationIdIncrement++), OperationType.CREDIT, operationTime, amount));
+			service.deposit(customer, account, amount);
+		} catch (Exception e) {
+		}
+	}
+
+	private void doWithdrawalOperationMockWithIdFor(Customer customer, Account account, BigDecimal amount,
+			Instant operationTime) {
+		try {
+			Mockito.when(operationServiceMock.addWithdrawOperation(any(BigDecimal.class), any(String.class)))
+					.thenReturn(new Operation(String.valueOf(operationIdIncrement++), OperationType.DEBIT, operationTime, amount));
+			service.withdraw(customer, account, amount);
+		} catch (Exception e) {
+		}
+	}
+
+	private void repeat(int times, Runnable runnable) {
+		range(0, times).forEach(i -> runnable.run());
 	}
 
 }
