@@ -37,11 +37,11 @@ public class OperationServiceTest {
 
 	@Test
 	public void should_operation_is_null_when_deposit_operation_of_zero_occur() {
-		Operation operation = service.addDepositOperation(_0, "TESTOP001");
+		Operation operation = service.addDepositOperation(null, "TESTOP001");
 
 		assertThat(operation).isEqualTo(null);
 	}
-
+	
 	@Test
 	public void should_throw_exception_when_deposit_operation_of_zero_occur() {
 		Operation operation = service.addDepositOperation(_0, "TESTOP001");
@@ -60,6 +60,13 @@ public class OperationServiceTest {
 	@Test
 	public void should_operation_is_null_when_withdrawal_operation_of_zero_occur() {
 		Operation operation = service.addWithdrawOperation(_0, "TESTOP001");
+
+		assertThat(operation).isEqualTo(null);
+	}
+	
+	@Test
+	public void should_operation_is_null_when_withdraw_null_amount_operation_occur() {
+		Operation operation = service.addWithdrawOperation(null, "TESTOP001");
 
 		assertThat(operation).isEqualTo(null);
 	}
