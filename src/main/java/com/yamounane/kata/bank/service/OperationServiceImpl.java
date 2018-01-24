@@ -15,7 +15,7 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	public Operation addDepositOperation(BigDecimal value, String operationId) {
-		if (value.compareTo(BigDecimal.ZERO) == 0) {
+		if (value == null || value.compareTo(BigDecimal.ZERO) == 0) {
 			return null;
 		}
 
@@ -25,7 +25,7 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	public Operation addWithdrawOperation(BigDecimal value, String operationId) {
-		if (value.compareTo(BigDecimal.ZERO) == 0) {
+		if (value == null || value.compareTo(BigDecimal.ZERO) == 0) {
 			return null;
 		}
 
