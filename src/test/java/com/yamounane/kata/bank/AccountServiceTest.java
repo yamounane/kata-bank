@@ -98,6 +98,16 @@ public class AccountServiceTest {
 	}
 	
 	@Test
+	public void should_account_balance_stay_unchanged_when_deposit_of_null_value_occur() throws AccountException {
+		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
+				.thenReturn(null);
+
+		service.withdraw(johnDoe, secondAccount, null);
+
+		assertThat(secondAccount.getBalance()).isEqualTo(_0);
+	}
+	
+	@Test
 	public void should_account_balance_increase_account_specified_without_impacting_other_accounts()
 			throws AccountException {
 		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
@@ -125,6 +135,16 @@ public class AccountServiceTest {
 				.thenReturn(null);
 
 		service.withdraw(johnDoe, secondAccount, _0);
+
+		assertThat(secondAccount.getBalance()).isEqualTo(_0);
+	}
+	
+	@Test
+	public void should_account_balance_stay_unchanged_when_withdrawal_of_null_value_occur() throws AccountException {
+		Mockito.when(operationServiceMock.addWithdrawOperation(any(BigDecimal.class), any(String.class)))
+				.thenReturn(null);
+
+		service.withdraw(johnDoe, secondAccount, null);
 
 		assertThat(secondAccount.getBalance()).isEqualTo(_0);
 	}
