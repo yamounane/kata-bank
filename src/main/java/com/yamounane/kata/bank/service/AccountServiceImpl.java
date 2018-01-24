@@ -56,9 +56,11 @@ public class AccountServiceImpl implements AccountService {
 		}
 
 		Operation withdrawOperation = operationService.addWithdrawOperation(amount, UUID.randomUUID().toString());
-		account.getOperations().add(withdrawOperation);
-		computeBalance(account);
-		return;
+
+		if (withdrawOperation != null) {
+			account.getOperations().add(withdrawOperation);
+			computeBalance(account);
+		}
 	}
 
 	@Override
@@ -74,8 +76,6 @@ public class AccountServiceImpl implements AccountService {
 			account.getOperations().add(depositOperation);
 			computeBalance(account);
 		}
-
-		return;
 	}
 
 	private String getJoinedStatementFromAccount(Account account) throws AccountException {
