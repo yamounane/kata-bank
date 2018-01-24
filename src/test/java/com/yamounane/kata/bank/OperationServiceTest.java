@@ -26,6 +26,8 @@ public class OperationServiceTest {
 
 	private final BigDecimal _1000 = new BigDecimal(1000);
 
+	private final BigDecimal _0 = new BigDecimal(0);
+
 	@Test
 	public void should_balance_increase_when_deposit_operation_occur() throws AccountException {
 		Operation operation = service.addDepositOperation(_1000, "TESTOP001");
@@ -35,11 +37,25 @@ public class OperationServiceTest {
 	}
 
 	@Test
+	public void should_operation_is_null_when_deposit_operation_of_zero_occur() throws AccountException {
+		Operation operation = service.addDepositOperation(_0, "TESTOP001");
+
+		assertThat(operation).isEqualTo(null);
+	}
+
+	@Test
 	public void should_balance_decrease_when_withdrawal_operation_occur() throws AccountException {
 		Operation operation = service.addWithdrawOperation(_1000, "TESTOP002");
 
 		assertThat(operation.getAmount()).isEqualTo(_1000);
 		assertThat(operation.getType()).isEqualTo(OperationType.DEBIT);
+	}
+	
+	@Test
+	public void should_operation_is_null_when_withdrawal_operation_of_zero_occur() throws AccountException {
+		Operation operation = service.addWithdrawOperation(_0, "TESTOP001");
+
+		assertThat(operation).isEqualTo(null);
 	}
 
 }
