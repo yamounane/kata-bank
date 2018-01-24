@@ -2,7 +2,6 @@ package com.yamounane.kata.bank.service;
 
 import java.math.BigDecimal;
 
-import com.yamounane.kata.bank.exception.AccountException;
 import com.yamounane.kata.bank.model.Operation;
 
 /**
@@ -22,10 +21,8 @@ public interface OperationService {
 	 * @param operationId
 	 *            id of the operation
 	 * @return credit operation created
-	 * @throws AccountException
-	 *             if account does not exists.
 	 */
-	Operation addDepositOperation(BigDecimal value, String operationId) throws AccountException;
+	Operation addDepositOperation(BigDecimal value, String operationId) ;
 
 	/**
 	 * Create DEBIT operation to given account
@@ -37,9 +34,7 @@ public interface OperationService {
 	 * @param operationId
 	 *            id of the operation
 	 * @return debit operation created
-	 * @throws AccountException
-	 *             if account does not exists.
 	 */
-	Operation addWithdrawOperation(BigDecimal value, String operationId) throws AccountException;
+	Operation addWithdrawOperation(BigDecimal value, String operationId);
 
 }

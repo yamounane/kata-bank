@@ -3,7 +3,6 @@ package com.yamounane.kata.bank.service;
 import java.math.BigDecimal;
 import java.time.Instant;
 
-import com.yamounane.kata.bank.exception.AccountException;
 import com.yamounane.kata.bank.model.Operation;
 import com.yamounane.kata.bank.model.OperationType;
 
@@ -15,7 +14,7 @@ import com.yamounane.kata.bank.model.OperationType;
 public class OperationServiceImpl implements OperationService {
 
 	@Override
-	public Operation addDepositOperation(BigDecimal value, String operationId) throws AccountException {
+	public Operation addDepositOperation(BigDecimal value, String operationId) {
 		if (value.compareTo(BigDecimal.ZERO) == 0) {
 			return null;
 		}
@@ -25,7 +24,7 @@ public class OperationServiceImpl implements OperationService {
 	}
 
 	@Override
-	public Operation addWithdrawOperation(BigDecimal value, String operationId) throws AccountException {
+	public Operation addWithdrawOperation(BigDecimal value, String operationId) {
 		if (value.compareTo(BigDecimal.ZERO) == 0) {
 			return null;
 		}
