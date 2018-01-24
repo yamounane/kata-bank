@@ -104,7 +104,7 @@ public class AccountServiceTest {
 	}
 
 	@Test
-	public void should_deposit_increase_when_multiple_deposit() throws AccountException {
+	public void should_balance_increase_when_multiple_deposit() throws AccountException {
 		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
 				.thenReturn(new Operation(UUID.randomUUID().toString(), OperationType.CREDIT, Instant.now(), _1000));
 
