@@ -2,6 +2,7 @@ package com.yamounane.kata.bank;
 
 import static java.util.stream.IntStream.range;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Matchers.any;
 
 import java.math.BigDecimal;
@@ -81,6 +82,22 @@ public class AccountServiceTest {
 	}
 
 	@Test
+	public void should_raise_exception_when_deposit_for_null_account_occurs() {
+		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
+				.thenReturn(null);
+
+		assertThatThrownBy(() -> service.deposit(johnDoe, null, _1000)).isInstanceOf(AccountException.class);
+	}
+	
+	@Test
+	public void should_raise_exception_when_deposit_for_null_customer_occurs() {
+		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
+				.thenReturn(null);
+
+		assertThatThrownBy(() -> service.deposit(null, secondAccount, _1000)).isInstanceOf(AccountException.class);
+	}
+	
+	@Test
 	public void should_account_balance_increase_account_specified_without_impacting_other_accounts()
 			throws AccountException {
 		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
@@ -110,6 +127,22 @@ public class AccountServiceTest {
 		service.withdraw(johnDoe, secondAccount, _0);
 
 		assertThat(secondAccount.getBalance()).isEqualTo(_0);
+	}
+	
+	@Test
+	public void should_raise_exception_when_withdrawal_for_null_account_occurs() {
+		Mockito.when(operationServiceMock.addWithdrawOperation(any(BigDecimal.class), any(String.class)))
+				.thenReturn(null);
+
+		assertThatThrownBy(() -> service.deposit(johnDoe, null, _1000)).isInstanceOf(AccountException.class);
+	}
+	
+	@Test
+	public void should_raise_exception_when_withdrawal_for_null_customer_occurs() {
+		Mockito.when(operationServiceMock.addWithdrawOperation(any(BigDecimal.class), any(String.class)))
+				.thenReturn(null);
+
+		assertThatThrownBy(() -> service.deposit(null, secondAccount, _1000)).isInstanceOf(AccountException.class);
 	}
 
 	@Test
