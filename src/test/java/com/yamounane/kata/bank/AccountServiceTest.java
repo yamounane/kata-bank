@@ -88,7 +88,7 @@ public class AccountServiceTest {
 
 		assertThatThrownBy(() -> service.deposit(johnDoe, null, _1000)).isInstanceOf(AccountException.class);
 	}
-	
+
 	@Test
 	public void should_raise_exception_when_deposit_for_null_customer_occurs() {
 		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
@@ -96,7 +96,7 @@ public class AccountServiceTest {
 
 		assertThatThrownBy(() -> service.deposit(null, secondAccount, _1000)).isInstanceOf(AccountException.class);
 	}
-	
+
 	@Test
 	public void should_account_balance_stay_unchanged_when_deposit_of_null_value_occur() throws AccountException {
 		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
@@ -106,7 +106,7 @@ public class AccountServiceTest {
 
 		assertThat(secondAccount.getBalance()).isEqualTo(_0);
 	}
-	
+
 	@Test
 	public void should_account_balance_increase_account_specified_without_impacting_other_accounts()
 			throws AccountException {
@@ -138,7 +138,7 @@ public class AccountServiceTest {
 
 		assertThat(secondAccount.getBalance()).isEqualTo(_0);
 	}
-	
+
 	@Test
 	public void should_account_balance_stay_unchanged_when_withdrawal_of_null_value_occur() throws AccountException {
 		Mockito.when(operationServiceMock.addWithdrawOperation(any(BigDecimal.class), any(String.class)))
@@ -148,7 +148,7 @@ public class AccountServiceTest {
 
 		assertThat(secondAccount.getBalance()).isEqualTo(_0);
 	}
-	
+
 	@Test
 	public void should_raise_exception_when_withdrawal_for_null_account_occurs() {
 		Mockito.when(operationServiceMock.addWithdrawOperation(any(BigDecimal.class), any(String.class)))
@@ -156,7 +156,7 @@ public class AccountServiceTest {
 
 		assertThatThrownBy(() -> service.deposit(johnDoe, null, _1000)).isInstanceOf(AccountException.class);
 	}
-	
+
 	@Test
 	public void should_raise_exception_when_withdrawal_for_null_customer_occurs() {
 		Mockito.when(operationServiceMock.addWithdrawOperation(any(BigDecimal.class), any(String.class)))
@@ -170,6 +170,16 @@ public class AccountServiceTest {
 		repeat(5, () -> doDepositOperationMockFor(johnDoe, secondAccount, _1000, Instant.now()));
 
 		assertThat(secondAccount.getBalance()).isEqualTo(_5000);
+	}
+
+	@Test
+	public void should_raise_exception_when_printing_statement_for_null_customer() throws AccountException {
+		assertThatThrownBy(() -> service.getStatement(null, secondAccount)).isInstanceOf(AccountException.class);
+	}
+
+	@Test
+	public void should_raise_exception_when_printing_statement_for_null_account() throws AccountException {
+		assertThatThrownBy(() -> service.getStatement(johnDoe, null)).isInstanceOf(AccountException.class);
 	}
 
 	@Test
