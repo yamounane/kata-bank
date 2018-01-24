@@ -92,6 +92,16 @@ public class AccountServiceTest {
 
 		assertThat(secondAccount.getBalance()).isEqualTo(_1000.negate());
 	}
+	
+	@Test
+	public void should_balance_stay_unchanged_when_withdrawal_of_zero_occur() throws AccountException {
+		Mockito.when(operationServiceMock.addWithdrawOperation(any(BigDecimal.class), any(String.class)))
+				.thenReturn(null);
+
+		service.withdraw(johnDoe, secondAccount, _0);
+
+		assertThat(secondAccount.getBalance()).isEqualTo(_0);
+	}
 
 	@Test
 	public void should_deposit_increase_when_multiple_deposit() throws AccountException {
