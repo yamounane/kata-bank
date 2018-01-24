@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
-import com.yamounane.kata.bank.exception.AccountException;
 import com.yamounane.kata.bank.model.Operation;
 import com.yamounane.kata.bank.model.OperationType;
 import com.yamounane.kata.bank.service.OperationService;
@@ -29,7 +28,7 @@ public class OperationServiceTest {
 	private final BigDecimal _0 = new BigDecimal(0);
 
 	@Test
-	public void should_balance_increase_when_deposit_operation_occur() throws AccountException {
+	public void should_balance_increase_when_deposit_operation_occur() {
 		Operation operation = service.addDepositOperation(_1000, "TESTOP001");
 
 		assertThat(operation.getAmount()).isEqualTo(_1000);
@@ -37,22 +36,29 @@ public class OperationServiceTest {
 	}
 
 	@Test
-	public void should_operation_is_null_when_deposit_operation_of_zero_occur() throws AccountException {
+	public void should_operation_is_null_when_deposit_operation_of_zero_occur() {
 		Operation operation = service.addDepositOperation(_0, "TESTOP001");
 
 		assertThat(operation).isEqualTo(null);
 	}
 
 	@Test
-	public void should_balance_decrease_when_withdrawal_operation_occur() throws AccountException {
+	public void should_throw_exception_when_deposit_operation_of_zero_occur() {
+		Operation operation = service.addDepositOperation(_0, "TESTOP001");
+
+		assertThat(operation).isEqualTo(null);
+	}
+
+	@Test
+	public void should_balance_decrease_when_withdrawal_operation_occur() {
 		Operation operation = service.addWithdrawOperation(_1000, "TESTOP002");
 
 		assertThat(operation.getAmount()).isEqualTo(_1000);
 		assertThat(operation.getType()).isEqualTo(OperationType.DEBIT);
 	}
-	
+
 	@Test
-	public void should_operation_is_null_when_withdrawal_operation_of_zero_occur() throws AccountException {
+	public void should_operation_is_null_when_withdrawal_operation_of_zero_occur() {
 		Operation operation = service.addWithdrawOperation(_0, "TESTOP001");
 
 		assertThat(operation).isEqualTo(null);
