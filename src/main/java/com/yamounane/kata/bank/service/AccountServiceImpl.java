@@ -28,56 +28,55 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public BigDecimal getBalance(Customer customer, Account account) throws AccountException {
-		if (customer != null && account != null) {
-			computeBalance(account);
-			return account.getBalance();
+		if (customer == null || account == null) {
+			throw new AccountException(
+					String.format("Unable to get because account %s or customer %s are null", account, customer));
 		}
 
-		throw new AccountException(
-				String.format("Unable to get because account %s or customer %s are null", account, customer));
+		computeBalance(account);
+		return account.getBalance();
 	}
 
 	@Override
 	public String getStatement(Customer customer, Account account) throws AccountException {
-		if (customer != null && account != null) {
-			List<String> statements = Arrays.asList(getJoinedStatementFromAccount(account).split(";"));
-			return statements.stream().map(statement -> statement + "\n").collect(Collectors.joining());
+		if (customer == null || account == null) {
+			throw new AccountException(String.format(
+					"Unable to retrieve a statement because account %s or customer %s are null", account, customer));
 		}
 
-		throw new AccountException(String.format(
-				"Unable to retrieve a statement because account %s or customer %s are null", account, customer));
+		List<String> statements = Arrays.asList(getJoinedStatementFromAccount(account).split(";"));
+		return statements.stream().map(statement -> statement + "\n").collect(Collectors.joining());
 	}
 
 	@Override
 	public void withdraw(Customer customer, Account account, BigDecimal amount) throws AccountException {
-		if (customer != null && account != null) {
-			Operation withdrawOperation = operationService.addWithdrawOperation(amount, UUID.randomUUID().toString());
-			account.getOperations().add(withdrawOperation);
-			computeBalance(account);
-			return;
+		if (customer == null || account == null) {
+			throw new AccountException(String
+					.format("Unable to make a deposit because account %s or customer %s are null", account, customer));
 		}
 
-		throw new AccountException(String.format("Unable to make a deposit because account %s or customer %s are null",
-				account, customer));
+		Operation withdrawOperation = operationService.addWithdrawOperation(amount, UUID.randomUUID().toString());
+		account.getOperations().add(withdrawOperation);
+		computeBalance(account);
+		return;
 	}
 
 	@Override
 	public void deposit(Customer customer, Account account, BigDecimal amount) throws AccountException {
-		if (customer != null && account != null) {
-			Operation depositOperation = operationService.addDepositOperation(amount, UUID.randomUUID().toString());
-			account.getOperations().add(depositOperation);
-			computeBalance(account);
-			return;
+		if (customer == null || account == null) {
+			throw new AccountException(String
+					.format("Unable to make a deposit because account %s or customer %s are null", account, customer));
 		}
-
-		throw new AccountException(String.format("Unable to make a deposit because account %s or customer %s are null",
-				account, customer));
+		
+		Operation depositOperation = operationService.addDepositOperation(amount, UUID.randomUUID().toString());
+		account.getOperations().add(depositOperation);
+		computeBalance(account);
+		return;
 	}
 
 	private String getJoinedStatementFromAccount(Account account) throws AccountException {
 		String statement = account.getOperations().stream().map(operation -> operation.toString())
 				.collect(Collectors.joining(";"));
-
 		return statement;
 	}
 
