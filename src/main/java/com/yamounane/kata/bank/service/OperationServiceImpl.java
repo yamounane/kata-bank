@@ -16,18 +16,21 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	public Operation addDepositOperation(BigDecimal value, String operationId) throws AccountException {
-		if (value.compareTo(BigDecimal.ZERO) != 0) {
-			return new Operation(operationId, OperationType.CREDIT, Instant.now(), value.abs());
+		if (value.compareTo(BigDecimal.ZERO) == 0) {
+			return null;
 		}
-		return null;
+
+		return new Operation(operationId, OperationType.CREDIT, Instant.now(), value.abs());
+
 	}
 
 	@Override
 	public Operation addWithdrawOperation(BigDecimal value, String operationId) throws AccountException {
-		if (value.compareTo(BigDecimal.ZERO) != 0) {
-			return new Operation(operationId, OperationType.DEBIT, Instant.now(), value.abs());
+		if (value.compareTo(BigDecimal.ZERO) == 0) {
+			return null;
 		}
-		return null;
+
+		return new Operation(operationId, OperationType.DEBIT, Instant.now(), value.abs());
 	}
 
 }
