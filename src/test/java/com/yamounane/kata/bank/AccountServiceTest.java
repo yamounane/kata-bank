@@ -41,6 +41,7 @@ public class AccountServiceTest {
 	private Account firstAccount;
 	private Account secondAccount;
 
+	private final BigDecimal _0 = new BigDecimal(0);
 	private final BigDecimal _1000 = new BigDecimal(1000);
 	private final BigDecimal _5000 = new BigDecimal(5000);
 
@@ -60,7 +61,17 @@ public class AccountServiceTest {
 
 		assertThat(secondAccount.getBalance()).isEqualTo(_1000);
 	}
+	
+	@Test
+	public void should_account_balance_stay_unchanged_when_deposit_of_zero_occurs() throws AccountException {
+		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
+				.thenReturn(null);
 
+		service.deposit(johnDoe, secondAccount, _0);
+
+		assertThat(secondAccount.getBalance()).isEqualTo(_0);
+	}
+	
 	@Test
 	public void should_deposit_increase_account_specified_without_impacting_other_accounts() throws AccountException {
 		Mockito.when(operationServiceMock.addDepositOperation(any(BigDecimal.class), any(String.class)))
